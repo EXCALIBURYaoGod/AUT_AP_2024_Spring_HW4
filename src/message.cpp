@@ -1,12 +1,14 @@
 #include "../include/message.h"
 #include <iostream>
 
-Message::Message(std::string type, std::string sender, std::string receiver, std::string time)
+Message::Message(std::string type, std::string sender, std::string receiver)
 {
     this->type = type;
     this->sender = sender;
     this->receiver = receiver;
+    std::time_t t = std::time(nullptr);
     this->time = time;
+    this->time.erase(time.find_last_not_of(" \n\r\t") + 1);
 }
 
 Message::~Message()
@@ -35,15 +37,15 @@ std::string Message::get_time() const
 
 void Message::print(std::ostream &os) const
 {
-    
+    os <<"*************************\n"<<
+    this->get_sender()<<" -> "<<this->receiver<<"\n"<<
+    "message type: "<<this->type<<"\n"<<
+    "message time: "<<this->time<<"\n"<<
+    "*************************\n";
 }
 
 std::ostream &operator<<(std::ostream &os, const Message &msg)
 {
-    os <<"*************************\n"<<
-    msg.sender<<" -> "<<msg.receiver<<"\n"<<
-    "message type: "<<msg.type<<"\n"<<
-    "message time: "<<msg.time<<"\n"<<
-    "*************************\n";
+    msg.print(os);
     return os;
 }
